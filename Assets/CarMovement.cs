@@ -1,40 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarMovement : MonoBehaviour
 {
-    public Rigidbody2D backTyre, frontTyre;
+    public static CarMovement carinstance;
+    public Rigidbody2D BackTire, FrontTire, Car;
     public float speed, movement;
-    public float  gasBreak;
+    public float fuel, FuelConsumption;
+    public Image fuelImage;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        carinstance = this;
+    }
     void Start()
     {
-        gasBreak = speed;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(speed);
-
-        frontTyre.AddTorque(-movement * speed * Time.fixedDeltaTime);
-        backTyre.AddTorque(-movement * speed * Time.fixedDeltaTime);
+        movement = Input.GetAxis("Horizontal");
+        fuelImage.fillAmount = fuel;
+        //movement = 0;
     }
     private void FixedUpdate()
     {
-        //Debug.Log(speed);
-        
-       // car.AddTorque(movement * speed * Time.fixedDeltaTime);
+        if (fuel > 0)
+        {
+            BackTire.AddTorque(-movement * speed * Time.fixedDeltaTime);
+            FrontTire.AddTorque(-movement * speed * Time.fixedDeltaTime);
+            Car.AddTorque(-movement * speed * Time.fixedDeltaTime);
+
+        }
+        fuel = fuel - FuelConsumption * Time.deltaTime * Mathf.Abs(movement);
+    }
+    /*public void Gas()
+    {
+        movement = 1f;
     }
     public void Brake()
     {
-       speed = 0f;
         movement = 0f;
-    }
-    public void Gas()
-    {
-        speed = gasBreak;
-        movement = 1f;
-    }
+    }*/
+
+
 }
